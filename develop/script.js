@@ -1,36 +1,66 @@
 // Assignment Code
 var generateBtn = document.querySelector("#generate");
 
+//Arrays for password content
+var specialCharacters = ["~","!","@","#","$","%","^","&","*","(",")","<",">","?",":",";",",",".","/","-","+","="];
+var lowercase = Array.from("qwertyuiopasdfghjklzxcvbnm");
+var uppercase = Array.from("QWERTYUIOPASDFGHJKLZXCVBNM");
+
+var password;
+
+var useUpper;
+var useLower;
+var useChar;
+
 // Write password to the #password input
 function writePassword() {
-  var password = generatePassword();
+  password = generatePassword();
   var passwordText = document.querySelector("#password");
 
   passwordText.value = password;
 
 }
 
-  //Empty password 
-  var passwordText = "";
+//Empty password 
+var passwordText = "";
 
-  //List of desired password content
-  var passwordContent = [];
+//List of desired password content
+var passwordContent = [];
 
-function generatePassword(){
+function createLength(){
+  //Length of password
+  passwordLength = prompt("Please select a password length between 8 and 128");
 
-  //Arrays for password content
+  if(passwordLength < 8 || passwordLength > 128){
+    createLength();  
+  }
+}
 
-  var specialCharacters = ["~","!","@","#","$","%","^","&","*","(",")","<",">","?",":",";",",",".","/","-","+","="];
-  var lowercase = "qwertyuiopasdfghjklzxcvbnm";
-  var uppercase = "QWERTYUIOPASDFGHJKLZXCVBNM";
+function InitializeVariables(){
+  //Reset all key variables and arrays
+  passwordContent = [];
+  useUpper = false;
+  useLower = false;
+  useChar = false;
 
   //Array booleans to decide password content
-  var useUpper=true;
-  var useLower=true;
-  var useChar=true;
+  useUpper = confirm("Would you like uppercase letters in your password?");
+  useLower = confirm("Would you like lowercase letters in your password?");
 
-  //Length of password
-  var passwordLength=10;
+  if(!useUpper && !useLower){
+    useChar = true;
+  }
+  else{
+    useChar = confirm("Would you like special characters in your password?");
+  }
+}
+
+function generatePassword(){
+  createLength();
+  InitializeVariables();
+
+  //clear out old password
+  var password = [];
   
   //Create passwordContent array
   if(useUpper){
@@ -42,6 +72,7 @@ function generatePassword(){
   if(useChar){
     passwordContent.push(specialCharacters);
   }
+
   //Create password
 
   for(i=0; i<passwordLength; i++)
@@ -52,24 +83,27 @@ function generatePassword(){
     //Pick a random character from the randomly picked array to add to password value
     var currentPasswordContentChar = currentPasswordContentArray[Math.floor(Math.random()*currentPasswordContentArray.length)];
 
-    passwordText += (currentPasswordContentChar);
+    password += currentPasswordContentChar;
   }
-  alert("Your new password is: "+passwordText);
+  // checkPasswordComponents();
+  return password;
 }
 
 //Make sure the password contains each desired type of character and if it doesn't then add the missing char
 function checkPasswordComponents(){
 
   //Count the amount of times each content array was used
-  var upperCount;
-  var lowerCount;
-  var charCount;
+  var upperCount = 0;
+  var lowerCount  = 0;
+  var charCount = 0;
 
-  for(var currentContent in passwordContent){
-    if(currentContent = uppercase){
+  console.log(password);
+
+  for(i=0; i<password.length; i++){
+    if(uppercase.includes(password[i])){
       upperCount++;
     }
-    else if(currentContent = lowercase){
+    else if(lowercase.includes(password[i])){
       lowerCount++;
     }
     else{
@@ -82,8 +116,7 @@ function checkPasswordComponents(){
   console.log(charCount);
   //Check to see if each desired content was used
 }
-generatePassword();
-console.log(passwordText);
+writePassword();
 
 // Add event listener to generate button
 generateBtn.addEventListener("click", writePassword);
