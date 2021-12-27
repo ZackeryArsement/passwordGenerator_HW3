@@ -12,8 +12,15 @@ var useUpper;
 var useLower;
 var useChar;
 
+//Number of characters from each character type
+var upperCount = 0;
+var lowerCount  = 0;
+var charCount = 0;
+
 // Write password to the #password input
 function writePassword() {
+  createLength();
+  InitializeVariables();
   password = generatePassword();
   var passwordText = document.querySelector("#password");
 
@@ -27,6 +34,7 @@ var passwordText = "";
 //List of desired password content
 var passwordContent = [];
 
+//Establish the length of the password... between 8 and 128
 function createLength(){
   //Length of password
   passwordLength = prompt("Please select a password length between 8 and 128");
@@ -36,6 +44,7 @@ function createLength(){
   }
 }
 
+//Establish character types used in the password
 function InitializeVariables(){
   //Reset all key variables and arrays
   passwordContent = [];
@@ -55,13 +64,12 @@ function InitializeVariables(){
   }
 }
 
+//Create the password using the established length and characters types
 function generatePassword(){
-  createLength();
-  InitializeVariables();
-
   //clear out old password
-  var password = [];
-  
+  password = [];
+  passwordContent = [];
+
   //Create passwordContent array
   if(useUpper){
     passwordContent.push(uppercase);
@@ -74,7 +82,6 @@ function generatePassword(){
   }
 
   //Create password
-
   for(i=0; i<passwordLength; i++)
   {
     //Pick a random array to add a content value to the password
@@ -85,20 +92,8 @@ function generatePassword(){
 
     password += currentPasswordContentChar;
   }
-  // checkPasswordComponents();
-  return password;
-}
-
-//Make sure the password contains each desired type of character and if it doesn't then add the missing char
-function checkPasswordComponents(){
 
   //Count the amount of times each content array was used
-  var upperCount = 0;
-  var lowerCount  = 0;
-  var charCount = 0;
-
-  console.log(password);
-
   for(i=0; i<password.length; i++){
     if(uppercase.includes(password[i])){
       upperCount++;
@@ -111,11 +106,23 @@ function checkPasswordComponents(){
     }
   }
 
-  console.log(upperCount);
-  console.log(lowerCount);
-  console.log(charCount);
-  //Check to see if each desired content was used
+  //If the password is missing any desired components then re-generate the password
+  if(upperCount = 0 && useUpper){
+    generatePassword();
+    console.log('failed');
+  }
+  else if(lowerCount = 0 && useLower){
+    generatePassword();
+    console.log('failed');
+  }
+  else if(charCount = 0 && useChar){
+    generatePassword();
+    console.log('failed');
+  }
+
+  return password;
 }
+
 writePassword();
 
 // Add event listener to generate button
